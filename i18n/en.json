@@ -1,45 +1,65 @@
 {
-  "application": {
-    "title": "Personality Insights",
-    "name": "Personality Insights",
-    "label": {
-      "documentation": "Documentation",
-      "apiOverview": "API Overview",
-      "contactUs": "Contact Us",
-      "keepExploring": "Keep Exploring",
-      "community": "Community",
-      "learnMore": "Learn more about this service",
-      "fork": "Fork on Github",
-      "yourPersonality": "Your Personality",
-      "comparedFootNote": "Compared to most people who participated in our surveys.",
-      "name": "Name",
-      "samplingError": "Sampling Error",
-      "value": "Value",
-      "personalityVisualizationData": "Visualization of Personality Data",
-      "personalityData": "Data Behind Your Personality",
-      "spanish": "Spanish",
-      "english": "English",
-      "chooseLanguage": "Choose Language",
-      "forkAndDeployBluemix": "Fork and Deploy on Bluemix",
-      "resources": "Resources",
-      "services": "Services",
-      "docs": "Docs",
-      "appGallery": "App Gallery",
-
-      "words": "words"
+    "application": {
+        "title": "Personality Insights (Comparison over Time)",
+        "name": "Personality Insights (Comparison over Time)",
+        "label": {
+            "documentation": "Documentation",
+            "apiOverview": "API Overview",
+            "contactUs": "Contact Us",
+            "keepExploring": "Keep Exploring",
+            "community": "Community",
+            "learnMore": "Learn more about this service",
+            "fork": "Fork on Github",
+            "yourPersonality": "Your Personality",
+            "yourPersonality0": "Your Personality at t0",
+            "yourPersonality1": "Your Personality at t1",
+            "comparedFootNote": "Compared to most people who participated in our surveys.",
+            "name": "Name",
+            "samplingError": "Sampling Error",
+            "value": "Value",
+            "personalityVisualizationData": "Visualization of Personality Data",
+            "personalityVisualizationData0": "Visualization of Personality Data at t0",
+            "personalityVisualizationData1": "Visualization of Personality Data at t1",
+            "personalityData": "Data Behind Your Personality",
+            "personalityData0": "Data Behind Your Personality at t0",
+            "personalityData1": "Data Behind Your Personality at t1",
+            "spanish": "Spanish",
+            "english": "English",
+            "chooseLanguage": "Choose Language",
+            "forkAndDeployBluemix": "Fork and Deploy on Bluemix",
+            "resources": "Resources",
+            "services": "Services",
+            "docs": "Docs",
+            "appGallery": "App Gallery",
+            "words": "words",
+            "words0": "application.label.words0",
+            "words1": "application.label.words1"
+        },
+        "input": {
+            "placeHolder0": "Please enter English text at t0 to analyze (minimum of 100 words)...",
+            "placeHolder1": "Please enter English text at t1 to analyze (minimum of 100 words)...",
+            "clear": "Clear",
+            "analyze": "Analyze",
+            "title": "Input Text"
+        },
+        "input0": {
+            "placeHolder": "Please enter English text to analyze (minimum of 100 words)...",
+            "clear": "Clear",
+            "analyze": "Analyze",
+            "title": "Input Text"
+        },
+        "input1": {
+            "placeHolder": "Please enter English text to analyze (minimum of 100 words)...",
+            "clear": "Clear",
+            "analyze": "Analyze",
+            "title": "Input Text"
+        },
+        "warning": {
+            "minimumRecommendedWarning": "We need a minimum of 3500 words and ideally 6000 words or more to compute statistically significant results. See <a href=\"http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/personality-insights/science.shtml\">the science behind the service</a>.",
+            "selfReflectiveText": "Ideally, the text should contain words we use in every day life relating to personal experiences, thoughts and responses. See <a href=\"http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/personality-insights/guidance.shtml#optimal\">usage guidence</a> for details."
+        }
     },
-    "input": {
-      "placeHolder": "Please enter English text to analyze (minimum of 100 words)...",
-      "clear": "Clear",
-      "analyze": "Analyze",
-      "title": "Input Text"
-    },
-    "warning": {
-      "minimumRecommendedWarning": "We need a minimum of 3500 words and ideally 6000 words or more to compute statistically significant results. See <a href=\"http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/personality-insights/science.shtml\">the science behind the service</a>.",
-      "selfReflectiveText": "Ideally, the text should contain words we use in every day life relating to personal experiences, thoughts and responses. See <a href=\"http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/personality-insights/guidance.shtml#optimal\">usage guidence</a> for details."
+    "service": {
+        "description": "The IBM Watson Personality Insights service uses linguistic analytics to extract a spectrum of cognitive and social characteristics from the text data that a person generates through blogs, tweets, forum posts, and more."
     }
-  },
-  "service": {
-    "description": "The IBM Watson Personality Insights service uses linguistic analytics to extract a spectrum of cognitive and social characteristics from the text data that a person generates through blogs, tweets, forum posts, and more."
-  }
 }

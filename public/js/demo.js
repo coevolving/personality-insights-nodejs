@@ -25,8 +25,9 @@ $(document).ready(function() {
     personImageUrl = 'images/app.png', // Can be blank
     language = 'en'; // language selection
 
-  // Jquery variables
-  var $content = $('.content'),
+  // Jquery variables, modified for two context fields
+  var $content0 = $('textarea[name="text0"]'),
+    $content1 = $('textarea[name="text1"]'),
     $loading   = $('.loading'),
     $error     = $('.error'),
     $errorMsg  = $('.errorMsg'),
@@ -39,20 +40,25 @@ $(document).ready(function() {
    */
   $('.clear-btn').click(function(){
     $('.clear-btn').blur();
-    $content.val('');
+    $content0.val('');
+    $content1.val('');
     updateWordsCount();
   });
 
   /**
    * Update words count on change
    */
-  $content.change(updateWordsCount);
+  $content0.change(updateWordsCount);
+  $content1.change(updateWordsCount);
 
   /**
    * Update words count on copy/past
    */
-  $content.bind('paste', function() {
+  $content0.bind('paste', function() {
     setTimeout(updateWordsCount, 100);
+  });
+  $content1.bind('paste', function() {
+	setTimeout(updateWordsCount, 100);
   });
 
   /**
@@ -72,32 +78,75 @@ $(document).ready(function() {
     if ($captcha.css('display') === 'table' && recaptcha === '')
       return;
 
-
     $loading.show();
     $captcha.hide();
     $error.hide();
     $traits.hide();
     $results.hide();
 
+    // POST for t0
     $.ajax({
       type: 'POST',
       data: {
         recaptcha: recaptcha,
-        text: $content.val(),
+        text: $content0.val(),
         language: language
       },
       url: '/',
       dataType: 'json',
-      success: function(response) {
+      success: function(response0) {
         $loading.hide();
 
-        if (response.error) {
-          showError(response.error);
+        if (response0.error) {
+          showError(response0.error);
         } else {
           $results.show();
-          showTraits(response);
-          showTextSummary(response);
-          showVizualization(response);
+          showTraits0(response0);
+          showTextSummary0(response0);
+          showVizualization0(response0);
+        }
+
+      },
+      error: function(xhr) {
+        $loading.hide();
+
+        var error;
+        try {
+          error = JSON.parse(xhr.responseText || {});
+        } catch(e) {}
+
+        if (xhr && xhr.status === 429){
+          $captcha.css('display','table');
+          $('.errorMsg').css('color','black');
+          error.error = 'Complete the captcha to proceed';
+        } else {
+          $('.errorMsg').css('color','red');
+        }
+
+        showError(error ? (error.error || error): '');
+      }
+    });
+   
+  // Post for t1 copied from t0
+  $.ajax({
+      type: 'POST',
+      data: {
+        recaptcha: recaptcha,
+        text: $content1.val(),
+        language: language
+      },
+      url: '/',
+      dataType: 'json',
+      success: function(response1) {
+        $loading.hide();
+
+        if (response1.error) {
+          showError(response1.error);
+        } else {
+          $results.show();
+          showTraits1(response1);
+          showTextSummary1(response1);
+          showVizualization1(response1);
         }
 
       },
@@ -137,17 +186,18 @@ $(document).ready(function() {
    * Personality Insights API in a table,
    * just trait names and values.
    */
-  function showTraits(data) {
+  function showTraits0(data) {
     console.log('showTraits()');
     $traits.show();
-
+    
+    var div = $('.traits-div0');
     var traitList = flatten(data.tree),
-      table = $traits;
+      table0 = $traits;
 
-    table.empty();
+    table0.empty();
 
     // Header
-    $('#header-template').clone().appendTo(table);
+    $('#header-template').clone().appendTo(table0);
 
     // For each trait
     for (var i = 0; i < traitList.length; i++) {
@@ -167,7 +217,7 @@ $(document).ready(function() {
             .find('span').html(elem.value === '' ?  '' : elem.value)
             .end()
           .end()
-          .appendTo(table);
+          .appendTo(table0);
       } else {
         // Model name
         $('#model-template').clone()
@@ -175,19 +225,72 @@ $(document).ready(function() {
           .find('.col-lg-12')
           .find('span').html(elem.id).end()
           .end()
-          .appendTo(table);
+          .appendTo(table0);
       }
     }
   }
+  function showTraits1(data) {
+	    console.log('showTraits()');
+	    $traits.show();
+
+	    var div = $('.traits-div1');
+	    var traitList = flatten(data.tree),
+	      table1 = $traits;
+
+	    table1.empty();
+
+	    // Header
+	    $('#header-template').clone().appendTo(table1);
+
+	    // For each trait
+	    for (var i = 0; i < traitList.length; i++) {
+	      var elem = traitList[i];
+
+	      var Klass = 'row';
+	      Klass += (elem.title) ? ' model_title' : ' model_trait';
+	      Klass += (elem.value === '') ? ' model_name' : '';
+
+	      if (elem.value !== '') { // Trait child name
+	        $('#trait-template').clone()
+	          .attr('class', Klass)
+	          .find('.tname')
+	          .find('span').html(elem.id).end()
+	          .end()
+	          .find('.tvalue')
+	            .find('span').html(elem.value === '' ?  '' : elem.value)
+	            .end()
+	          .end()
+	          .appendTo(table1);
+	      } else {
+	        // Model name
+	        $('#model-template').clone()
+	          .attr('class', Klass)
+	          .find('.col-lg-12')
+	          .find('span').html(elem.id).end()
+	          .end()
+	          .appendTo(table1);
+	      }
+	    }
+	  }
 
   /**
    * Construct a text representation for big5 traits crossing, facets and
    * values.
    */
-  function showTextSummary(data) {
+  function showTextSummary0(data) {
     console.log('showTextSummary()');
     var paragraphs = textSummary.assemble(data.tree);
-    var div = $('.summary-div');
+    var div = $('.summary-div0');
+    $('.outputMessageFootnote').text(data.word_count_message ? '**' + data.word_count_message + '.' : '');
+    div.empty();
+    paragraphs.forEach(function(sentences) {
+      $('<p></p>').text(sentences.join(' ')).appendTo(div);
+    });
+  }
+  function showTextSummary1(data) {
+    console.log('showTextSummary()');
+    var paragraphs = textSummary.assemble(data.tree);
+    var div = $('.summary-div1');
     $('.outputMessageFootnote').text(data.word_count_message ? '**' + data.word_count_message + '.' : '');
     div.empty();
     paragraphs.forEach(function(sentences) {
@@ -201,7 +304,7 @@ $(document).ready(function() {
  * It uses the arguments widgetId, widgetWidth, widgetHeight and personImageUrl
  * declared on top of this script.
  */
-function showVizualization(theProfile) {
+function showVizualization0(theProfile) {
   console.log('showVizualization()');
 
   $('#' + widgetId).empty();
@@ -283,6 +386,88 @@ function showVizualization(theProfile) {
   if (personImageUrl)
     widget.addPersonImage.call(widget, personImageUrl);
 }
+function showVizualization1(theProfile) {
+	  console.log('showVizualization1()');
+
+	  $('#' + widgetId).empty();
+	  var d3vis = d3.select('#' + widgetId).append('svg:svg');
+	  var widget = {
+	    d3vis: d3vis,
+	    data: theProfile,
+	    loadingDiv: 'dummy',
+	    switchState: function() {
+	      console.log('[switchState]');
+	    },
+	    _layout: function() {
+	      console.log('[_layout]');
+	    },
+	    showTooltip: function() {
+	      console.log('[showTooltip]');
+	    },
+	    id: 'SystemUWidget',
+	    COLOR_PALLETTE: ['#1b6ba2', '#488436', '#d52829', '#F53B0C', '#972a6b', '#8c564b', '#dddddd'],
+	    expandAll: function() {
+	      this.vis.selectAll('g').each(function() {
+	        var g = d3.select(this);
+	        if (g.datum().parent && // Isn't the root g object.
+	          g.datum().parent.parent && // Isn't the feature trait.
+	          g.datum().parent.parent.parent) { // Isn't the feature dominant trait.
+	          g.attr('visibility', 'visible');
+	        }
+	      });
+	    },
+	    collapseAll: function() {
+	      this.vis.selectAll('g').each(function() {
+	        var g = d3.select(this);
+	        if (g.datum().parent !== null && // Isn't the root g object.
+	          g.datum().parent.parent !== null && // Isn't the feature trait.
+	          g.datum().parent.parent.parent !== null) { // Isn't the feature dominant trait.
+	          g.attr('visibility', 'hidden');
+	        }
+	      });
+	    },
+	    addPersonImage: function(url) {
+	      if (!this.vis || !url) {
+	        return;
+	      }
+	      var icon_defs = this.vis.append('defs');
+	      var width = this.dimW,
+	        height = this.dimH;
+
+	      // The flower had a radius of 640 / 1.9 = 336.84 in the original, now is 3.2.
+	      var radius = Math.min(width, height) / 16.58; // For 640 / 1.9 -> r = 65
+	      var scaled_w = radius * 2.46; // r = 65 -> w = 160
+
+	      var id = 'user_icon_' + this.id;
+	      icon_defs.append('pattern')
+	        .attr('id', id)
+	        .attr('height', 1)
+	        .attr('width', 1)
+	        .attr('patternUnits', 'objectBoundingBox')
+	        .append('image')
+	        .attr('width', scaled_w)
+	        .attr('height', scaled_w)
+	        .attr('x', radius - scaled_w / 2) // r = 65 -> x = -25
+	        .attr('y', radius - scaled_w / 2)
+	        .attr('xlink:href', url)
+	        .attr('opacity', 1.0)
+	        .on('dblclick.zoom', null);
+	      this.vis.append('circle')
+	        .attr('r', radius)
+	        .attr('stroke-width', 0)
+	        .attr('fill', 'url(#' + id + ')');
+	    }
+	  };
+
+	  widget.dimH = widgetHeight;
+	  widget.dimW = widgetWidth;
+	  widget.d3vis.attr('width', widget.dimW).attr('height', widget.dimH);
+	  widget.d3vis.attr('viewBox', '0 0 ' + widget.dimW + ', ' + widget.dimH);
+	  renderChart.call(widget);
+	  widget.expandAll.call(widget);
+	  if (personImageUrl)
+	    widget.addPersonImage.call(widget, personImageUrl);
+	}
 
   /**
    * Returns a 'flattened' version of the traits tree, to display it as a list
@@ -311,23 +496,32 @@ function showVizualization(theProfile) {
   }
 
   function updateWordsCount() {
-    var text = $content.val();
-    var wordsCount = text.match(/\S+/g) ? text.match(/\S+/g).length : 0;
-    $('.wordsCountFootnote').css('color',wordsCount < MIN_WORDS ? 'red' : 'gray');
-    $('.wordsCount').text(wordsCount);
+    var text0 = $content0.val();
+    var text1 = $content1.val();
+    var wordsCount0 = text0.match(/\S+/g) ? text0.match(/\S+/g).length : 0;
+    var wordsCount1 = text1.match(/\S+/g) ? text1.match(/\S+/g).length : 0;
+    $('.wordsCountFootnote0').css('color',wordsCount0 < MIN_WORDS ? 'red' : 'gray');
+    $('.wordsCountFootnote1').css('color',wordsCount1 < MIN_WORDS ? 'red' : 'gray');
+    $('.wordsCount0').text(wordsCount0);
+    $('.wordsCount1').text(wordsCount1);
   }
 
   function onSampleTextChange() {
     var isEnglish = $('#english_radio').is(':checked');
     language = isEnglish ? 'en' : 'es';
 
-    $.get('/text/' + language + '.txt').done(function(text) {
-      $content.val(text);
+    $.get('/text/' + language + '0.txt').done(function(text0) {
+      $content0.val(text0);
       updateWordsCount();
+    });
+    $.get('/text/' + language + '1.txt').done(function(text1) {
+        $content1.val(text1);
+        updateWordsCount();
     });
   }
 
   onSampleTextChange();
-  $content.keyup(updateWordsCount);
+  $content0.keyup(updateWordsCount);
+  $content1.keyup(updateWordsCount);
   $('.sample-radio').change(onSampleTextChange);
 });

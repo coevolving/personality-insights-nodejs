@@ -18,15 +18,23 @@ block row-content
                     input#english_radio.sample-radio(type='radio', name='sample_text', value='en', checked)
                     span=t('application.label.english')
                 div.sample-radio-container
-                  label
+                  label                    
                     input.sample-radio(type='radio', name='sample_text', value='es')
                     span=t('application.label.spanish')
-              textarea.content.form-control(rows='12', required='true', name='text'
-                placeholder=t('application.input.placeHolder'))
-                |#{content}
-              div.text-right.wordsCountFootnote
-                span.wordsCount.small
-                span.small=" " + t('application.label.words')
+              div#t0
+                textarea.content.form-control(rows='12', required='true', name='text0'
+                  placeholder=t('application.input.placeHolder0'))
+                  |#{content0}
+                div.text-right.wordsCount0Footnote
+                  span.wordsCount0.small
+                  span.small=" " + t('application.label.words')
+              div#t1  
+                textarea.content.form-control(rows='12', required='true', name='text1'
+                  placeholder=t('application.input.placeHolder1'))
+                  |#{content1}
+                div.text-right.wordsCount1Footnote
+                  span.wordsCount1.small
+                  span.small=" " + t('application.label.words')
           div.form-group.row.buttons-container
             div.col-lg-4.col-xs-4
               button.btn.btn-block.clear-btn(type='button')=t('application.input.clear')
@@ -44,21 +52,38 @@ block row-content
               div.g-recaptcha(data-sitekey='6LcRbQkTAAAAAGUFVbnuqDfse-XZASLZwoC34oJV')
 
         div.results(style='display: none;')
-          h2= t('application.label.yourPersonality') + "*"
-          div.well
-            div.summary-div
-            div.text-right(style='color: gray')
-              em.small= "*" + t('application.label.comparedFootNote')
-            div.text-right(style='color: gray')
-              em.small.outputMessageFootnote
-      div.results(style='display: none;')
-        div.row
-          div.col-lg-5.col-md-12.col-xs-12
-            h3=t('application.label.personalityData')
-            div.col555px.well.traits(style='display: none;')
-          div.col-lg-7.col-xs-12.col-md-12
-            h3=t('application.label.personalityVisualizationData')
-            div.well#vizcontainer
+          div#yourPersonality0
+            h2= t('application.label.yourPersonality0') + "*"
+            div.well
+              div.summary-div0
+              div.text-right(style='color: gray')
+                em.small= "*" + t('application.label.comparedFootNote')
+              div.text-right(style='color: gray')
+                em.small.outputMessageFootnote
+           div#yourPersonality1
+            h2= t('application.label.yourPersonality1') + "*"
+            div.well
+              div.summary-div1
+              div.text-right(style='color: gray')
+                em.small= "*" + t('application.label.comparedFootNote')
+              div.text-right(style='color: gray')
+                em.small.outputMessageFootnote
+        div.results(style='display: none;')
+          div.row
+            div.col-lg-5.col-md-12.col-xs-12
+              div.traits-div0
+                h3=t('application.label.personalityData0')
+                div.col555px.well.traits(style='display: none;')
+              div.traits-div1
+                h3=t('application.label.personalityData1')
+                div.col555px.well.traits(style='display: none;')
+            div.col-lg-7.col-xs-12.col-md-12
+              div#personalityViz0
+                h3=t('application.label.personalityVisualizationData0')
+                div.well#vizcontainer
+              div#personalityViz1
+                h3=t('application.label.personalityVisualizationData1')
+                div.well#vizcontainer
 
       //- templates to avoid to create HTML in javascript
       div.hidden
